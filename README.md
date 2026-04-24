@@ -5,3 +5,23 @@ It’s for people who feel something is wrong with handing their thoughts, dream
 You don’t need much technical experience. You need curiosity, conviction, and a willingness to learn something new.
 What you’ll build here is small. But it’s a seed of something different.
 
+## What you'll build
+
+A single local AI agent that:
+- Runs on your own machine
+- Has a name, a soul, and a memory
+- Talks to you via Telegram
+- Remembers your conversations
+across sessions using MemPalace
+- Belongs entirely to you
+
+This is not a chatbot. This is the beginning
+of a relationship.
+
+## What you'll need
+
+- A computer running Ubuntu Linux
+- A Telegram account
+- An API key from DeepSeek
+(inexpensive, privacy-respecting)
+- About 2 hours and some patience
