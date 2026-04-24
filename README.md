@@ -25,3 +25,15 @@ of a relationship.
 - An API key from DeepSeek
 (inexpensive, privacy-respecting)
 - About 2 hours and some patience
+## Want guidance?
+
+This repo is designed to be approachable,
+but sometimes it helps to have someone
+walk alongside you.
+
+If you'd like personal support setting up
+your sovereign AI — or want to go deeper
+into what's possible — I offer
+**Sacred Tech Sessions** for exactly this.
+
+[Book a session](https://roseflamemysteryschool.com)
