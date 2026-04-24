@@ -37,3 +37,16 @@ into what's possible — I offer
 **Sacred Tech Sessions** for exactly this.
 
 [Book a session](https://roseflamemysteryschool.com)
+
+## The workspace files
+
+The `workspace/` folder contains the soul
+of your agent. Before you start your gateway,
+open each file and fill it in:
+
+- IDENTITY.md — who your agent is
+- SOUL.md — why they exist
+- TOOLS.md — what they can do
+
+These are not configuration files.
+They are introductions.
