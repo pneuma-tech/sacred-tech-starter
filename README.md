@@ -25,6 +25,7 @@ of a relationship.
 - An API key from DeepSeek
 (inexpensive, privacy-respecting)
 - About 2 hours and some patience
+- Note: DeepSeek is an API service — your inference calls leave your machine. For full local sovereignty, you can substitute Ollama with a local model. A local-only guide is coming soon.
 ## Want guidance?
 
 This repo is designed to be approachable,
