@@ -12,8 +12,7 @@ If you’re stuck, check these first:
 • Errors after config edits → restore from backup
 Then scroll for full explanations below.
 
-Don’t use MCP registration with OpenClaw
-MCP registration caused unreliable tool behavior including hallucinated tool calls. Use REST + curl via exec/shell instead — this is stable.
+MCP registration caused unreliable tool behavior in at least one documented case. Use REST + curl as a safer alternative until you’ve tested MCP in your specific setup.
 
 ⚠️ Never use openclaw gateway –force
 This can overwrite your config. Instead use:
