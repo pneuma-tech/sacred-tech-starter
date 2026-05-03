@@ -52,3 +52,25 @@ Use openclaw config set for simple values only. For complex JSON like peers arra
 Always back up before changing config
 cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.backup-$(date +%F)
 Do this every time before editing config.
+
+May 2026 — Agent builds its own MemPalace skill
+• OpenClaw tools config key does not use an entries wrapper — that key is invalid and will break the gateway
+• Use skill-creator to give agents new capabilities; they can build and self-correct their own tools autonomously
+• MemPalace search expects POST with {"query": "..."} body, not GET with ?q= param
+• Shared council memory and personal native memory serve different purposes — both valuable
+• Never use openclaw gateway --force — use pkill -f openclaw && openclaw gateway
+
+Problem: Writing Python files to disk reliably
+The issue: When pasting multi-line Python code into the terminal via nano or through heredoc commands (cat << 'EOF'), indentation gets corrupted and escape characters get mangled, causing SyntaxErrors and IndentationErrors. Single-line python3 -c commands have the same problem with escaped newlines and quotes.
+What didn’t work:
+• Pasting into nano — indentation corrupted
+• cat << 'EOF' heredoc — newlines lost when sent through chat
+• python3 -c with embedded newlines — escape sequences mangled
+• Patching files with string replacement — quote escaping issues
+What worked reliably:
+• Create the file cleanly on Claude.ai as a downloadable attachment
+• Delete any cached version from Downloads first: rm ~/Downloads/filename.py
+• Download the fresh file from the chat
+• Copy into place with a single cp command: cp ~/Downloads/filename.py /path/to/destination.py
+• Verify with head -5 or grep before running
+Key lesson: The download method bypasses all terminal encoding issues because the file is written correctly on Anthropic’s end before it ever touches your terminal.
