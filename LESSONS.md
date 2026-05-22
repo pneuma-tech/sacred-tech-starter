@@ -226,3 +226,7 @@ This flow is new and unfamiliar even to experienced OpenClaw users. Walk clients
 What this flow protects against:
 The new auth system ensures only approved devices can control the gateway. This matters especially when Cloudflare Tunnel is in use and the dashboard is exposed beyond localhost — unauthorized browsers can reach the URL but can’t connect without explicit device approval.
 
+
+Lesson: The pairing-approve command must be TYPED, never pasted. Copying it from Telegram drags an invisible newline that causes zsh: parse error near '\n'. This is the single most common reason pairing “never works.” Type the command and code by hand.
+
+
