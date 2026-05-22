@@ -74,3 +74,155 @@ What worked reliably:
 • Copy into place with a single cp command: cp ~/Downloads/filename.py /path/to/destination.py
 • Verify with head -5 or grep before running
 Key lesson: The download method bypasses all terminal encoding issues because the file is written correctly on Anthropic’s end before it ever touches your terminal.
+
+Lesson: Never run OpenClaw gateway with sudo
+
+Date learned: May 22, 2026
+Context: Fresh OpenClaw install on Mac (no VM), setting up new agent Ganesh
+
+What happened:
+During install, launchctl bootstrap failed with an I/O error when trying to register the gateway as a background service. As a quick workaround, sudo openclaw gateway run was used to get the gateway running. This appeared to work — the dashboard loaded, the agent responded in the browser — but Telegram never received messages.
+
+Root cause:
+Running the gateway with sudo causes all config files to be written as the root user instead of the logged-in user. This means the regular user can’t read or edit the config, channels can’t authenticate properly, and Telegram polling breaks silently.
+
+The rule:
+
+• ✅ Use sudo only to fix permissions (e.g. sudo chown -R $(whoami) ~/.openclaw)
+• ❌ Never use sudo to run the gateway
+• ❌ Never use openclaw gateway --force (overwrites config)
+
+Correct fix for launchctl error:
+
+sudo chown -R $(whoami) ~/.openclaw
+openclaw gateway run
+
+
+Run as normal user after fixing ownership. Everything stays owned by you.
+
+How to recover if you already ran with sudo:
+
+# Stop the gateway (Ctrl+C)
+sudo chown -R $(whoami) ~/.openclaw
+openclaw gateway run
+
+
+Client-facing note:
+If a client hits the launchctl error during onboarding, fix permissions first, then run as normal user. Never bypass with sudo — it creates silent downstream failures that are hard to trace.
+
+Lesson: npm global install permissions on Mac with Homebrew
+
+Date learned: May 22, 2026
+Context: Fresh OpenClaw install on Mac (Apple Silicon, Homebrew-managed Node)
+
+What happened:
+Running the official OpenClaw installer (curl -fsSL https://openclaw.ai/install.sh | bash) failed twice with:
+
+npm error EACCES: permission denied, mkdir '/opt/homebrew/lib/node_modules/openclaw'
+npm error code: 'EACCES'
+
+
+The installer couldn’t write to Homebrew’s global node_modules folder because it was owned by root, not the logged-in user.
+
+Root cause:
+On Macs with Homebrew-managed Node, the global npm prefix is /opt/homebrew. The node_modules folder inside it is often owned by root, which blocks global npm installs for regular users.
+
+The fix:
+
+# Step 1: Find your npm prefix (should say /opt/homebrew on Apple Silicon)
+npm config get prefix
+
+# Step 2: Fix ownership of the lib folder
+sudo chown -R $(whoami) /opt/homebrew/lib
+
+# Step 3: Now install normally — no sudo needed
+npm install -g openclaw@latest
+
+
+Verify it worked:
+
+openclaw --version
+# Should print e.g. OpenClaw 2026.5.20
+
+
+The rule:
+
+• ✅ Use sudo chown to fix folder ownership first
+• ✅ Then run npm install -g as normal user
+• ❌ Never run sudo npm install -g — this reinstates the root ownership problem and breaks future installs
+
+Client-facing note:
+This will happen on almost every fresh Mac install with Homebrew. It’s a one-time fix per machine. After running the chown command once, all future npm global installs work normally without sudo.
+
+Warning signs this is your problem:
+
+• Error says EACCES or permission denied
+• Path in error contains /opt/homebrew/lib/node_modules
+• Install fails twice in a row (the installer retries once automatically)
+
+Lesson: Device pairing and dashboard auth in OpenClaw v2026.5.20+
+
+Date learned: May 22, 2026
+Context: Fresh OpenClaw install, accessing Control UI dashboard for first time
+
+What’s new in this version:
+OpenClaw v2026.5.20 introduced a more secure dashboard auth flow. The old openclaw auth pair command no longer exists. Device pairing now happens through a combination of the CLI and the browser Control UI.
+
+What happened:
+After starting the gateway, navigating to http://127.0.0.1:18789 showed “Auth required” — the browser couldn’t connect without a token. Then after getting a token, it showed “Device pairing required” with a device ID that needed approval.
+
+The correct flow — step by step:
+
+Step 1: Start the gateway as normal user
+
+openclaw gateway run
+
+
+Leave this terminal window open and running.
+
+Step 2: Get the tokenized dashboard URL
+Open a second terminal window and run:
+
+openclaw dashboard --no-open
+
+
+This copies a token-authenticated URL to your clipboard automatically. Do NOT navigate to the plain http://127.0.0.1:18789 — use the tokenized URL instead.
+
+Step 3: Paste the tokenized URL into your browser
+Cmd+V into the address bar. This pre-fills the gateway token and gets you past the first auth screen.
+
+Step 4: Approve the device pairing request
+The browser will show “Device pairing required” with a command like:
+
+openclaw devices approve <device-id>
+
+
+Copy the exact command shown on screen. Run it in your second terminal window:
+
+sudo openclaw devices approve <device-id-from-screen>
+
+
+You’ll see Approved <hash> in green when it works.
+
+Step 5: Click Connect in the browser
+After approval, go back to the browser and click Connect. The dashboard should load showing “Assistant — Ready to chat.”
+
+Important notes:
+
+• The device ID shown on screen is unique to each browser session — copy it exactly as shown, don’t type from memory
+• This is a one-time approval per browser — once approved, that browser connects automatically on future sessions
+• The --no-open flag suppresses auto-launch so you can copy the URL manually; without it the browser opens automatically but may not have the token embedded correctly in all cases
+
+The rule:
+
+• ✅ Always use openclaw dashboard --no-open to get the tokenized URL
+• ✅ Always approve device pairing from the exact command shown in the browser
+• ❌ Don’t navigate to the plain IP address directly — you’ll get stuck in auth loops
+• ❌ Don’t look for openclaw auth pair — it no longer exists in this version
+
+Client-facing note:
+This flow is new and unfamiliar even to experienced OpenClaw users. Walk clients through it slowly — it looks scarier than it is. The key insight is: the browser tells you exactly what command to run. Just read the screen and follow it. Three steps: tokenized URL → approve device → click Connect.
+
+What this flow protects against:
+The new auth system ensures only approved devices can control the gateway. This matters especially when Cloudflare Tunnel is in use and the dashboard is exposed beyond localhost — unauthorized browsers can reach the URL but can’t connect without explicit device approval.
+
