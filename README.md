@@ -38,7 +38,7 @@ Note: DeepSeek is an API service, meaning some requests leave your machine. For 
 Want guidance?
 This repo is designed to be approachable. But sometimes it helps to have someone walk alongside you.
 If you’d like support setting up your sovereign AI — or want to go deeper into what’s possible — I offer Sacred Tech Sessions for exactly this.
-Book a session: https://roseflamemysteryschool.com
+Book a session: https://sacredtechsessions.com
 
 The workspace files
 The workspace/ folder contains the soul of your agent. These files shape how your agent thinks, responds, and evolves. Before you run anything, open each file and fill it in:
