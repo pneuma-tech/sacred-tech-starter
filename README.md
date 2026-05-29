@@ -28,9 +28,9 @@ A single local AI agent that:
 This is not just a tool. It is the beginning of a relationship.
 
 What you’ll need
-• A computer (Ubuntu Linux is ideal. Mac works with minor adjustments. Windows is not fully supported yet.)
+• A computer (Ubuntu Linux is ideal. Mac works with minor adjustments. Windows support is improving — check the OpenClaw docs for current status.)
 • A phone with Telegram installed
-• A DeepSeek account at platform.deepseek.com
+• A DeepSeek account at platform.deepseek.com (Prefer not to use a Chinese-hosted service? Qwen offers a free cloud tier with no API key required — just authorize via browser during setup. For full local sovereignty with no cloud at all, an Ollama local model guide is coming soon.)
 • About $5 of DeepSeek credits
 • 1–2 hours of unhurried time
 Note: DeepSeek is an API service, meaning some requests leave your machine. For full local sovereignty, you can switch to Ollama. A local-only guide is coming soon.
